@@ -15,3 +15,15 @@ spring:
       pageable:
         one-indexed-parameters: true
         default-page-size: 5
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: "mcyoo247@gmail.com"
+    password: "bxnfvggrvpvuqydw"
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true

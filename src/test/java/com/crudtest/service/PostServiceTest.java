@@ -3,7 +3,6 @@ package com.crudtest.service;
 import com.crudtest.domain.Post;
 import com.crudtest.exception.PostNotFound;
 import com.crudtest.repository.PostRepository;
-import com.crudtest.request.EmailCreate;
 import com.crudtest.request.PostCreate;
 import com.crudtest.request.PostEdit;
 import com.crudtest.request.PostSearch;

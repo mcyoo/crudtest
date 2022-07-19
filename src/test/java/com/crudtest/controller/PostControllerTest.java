@@ -1,16 +1,13 @@
 package com.crudtest.controller;
 
-import com.crudtest.domain.Email;
-import com.crudtest.repository.EmailRepository;
-import com.crudtest.request.EmailCreate;
+import com.crudtest.domain.User;
+import com.crudtest.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.crudtest.domain.Post;
 import com.crudtest.repository.PostRepository;
 import com.crudtest.request.PostCreate;
 import com.crudtest.request.PostEdit;
-import org.aspectj.lang.annotation.Before;
 import org.hamcrest.Matchers;
-import org.junit.After;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,10 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -47,13 +41,13 @@ class PostControllerTest {
     private PostRepository postRepository;
 
     @Autowired
-    private EmailRepository emailRepository;
+    private UserRepository userRepository;
 
 
     @BeforeEach
     void clean() {
         postRepository.deleteAll();
-        emailRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
 
@@ -68,16 +62,16 @@ class PostControllerTest {
                 .content("내용입니다")
                 .build();
 
-        Email email = Email.builder()
+        User user = User.builder()
                 .email("asdf")
                 .key("123456")
                 .build();
 
-        emailRepository.save(email);
+        userRepository.save(user);
 
         String json = objectMapper.writeValueAsString(request);
 
-        mockMvc.perform(post("/posts?key={key}",email.getKey())
+        mockMvc.perform(post("/posts?key={key}", user.getKey())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
                 )
@@ -96,16 +90,16 @@ class PostControllerTest {
                 .build();
 
 
-        Email email = Email.builder()
+        User user = User.builder()
                 .email("asdf")
                 .key("123456")
                 .build();
 
-        emailRepository.save(email);
+        userRepository.save(user);
 
         String json = objectMapper.writeValueAsString(request);
 
-        mockMvc.perform(post("/posts?key={key}",email.getKey())
+        mockMvc.perform(post("/posts?key={key}", user.getKey())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
                 )
@@ -126,15 +120,15 @@ class PostControllerTest {
 
         String json = objectMapper.writeValueAsString(request);
 
-        Email email = Email.builder()
+        User user = User.builder()
                 .email("asdf")
                 .key("123456")
                 .build();
 
-        emailRepository.save(email);
+        userRepository.save(user);
 
         //when
-        mockMvc.perform(post("/posts?key={key}",email.getKey())
+        mockMvc.perform(post("/posts?key={key}", user.getKey())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
                 )
@@ -159,15 +153,15 @@ class PostControllerTest {
                 .build();
         postRepository.save(post);
 
-        Email email = Email.builder()
+        User user = User.builder()
                 .email("asdf")
                 .key("123456")
                 .build();
 
-        emailRepository.save(email);
+        userRepository.save(user);
 
         //expected
-        mockMvc.perform(get("/posts/{postId}?key={key}", post.getId(),email.getKey())
+        mockMvc.perform(get("/posts/{postId}?key={key}", post.getId(), user.getKey())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(post.getId()))
@@ -201,15 +195,15 @@ class PostControllerTest {
         );
          */
 
-        Email email = Email.builder()
+        User user = User.builder()
                 .email("asdf")
                 .key("123456")
                 .build();
 
-        emailRepository.save(email);
+        userRepository.save(user);
 
         //expected
-        mockMvc.perform(get("/posts?page=1&size=10&key={key}",email.getKey())
+        mockMvc.perform(get("/posts?page=1&size=10&key={key}", user.getKey())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()", Matchers.is(10)))
@@ -233,15 +227,15 @@ class PostControllerTest {
 
         String json = objectMapper.writeValueAsString(postEdit);
 
-        Email email = Email.builder()
+        User user = User.builder()
                 .email("asdf")
                 .key("123456")
                 .build();
 
-        emailRepository.save(email);
+        userRepository.save(user);
 
         //expected
-        mockMvc.perform(patch("/posts/{postId}?key={key}", post.getId(),email.getKey())
+        mockMvc.perform(patch("/posts/{postId}?key={key}", post.getId(), user.getKey())
                         .content(json)
                         .contentType(MediaType.APPLICATION_JSON)
                 )
@@ -259,15 +253,15 @@ class PostControllerTest {
                 .build()
         );
 
-        Email email = Email.builder()
+        User user = User.builder()
                 .email("asdf")
                 .key("123456")
                 .build();
 
-        emailRepository.save(email);
+        userRepository.save(user);
 
         //expected
-        mockMvc.perform(delete("/posts/{postId}?key={key}", post.getId(),email.getKey())
+        mockMvc.perform(delete("/posts/{postId}?key={key}", post.getId(), user.getKey())
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isOk())
@@ -277,14 +271,14 @@ class PostControllerTest {
     @Test
     @DisplayName("존재하지 않는 게시글 조회")
     void test8() throws Exception {
-        Email email = Email.builder()
+        User user = User.builder()
                 .email("asdf")
                 .key("123456")
                 .build();
 
-        emailRepository.save(email);
+        userRepository.save(user);
         //expected
-        mockMvc.perform(get("/posts/{postId}?key={key}", 1L,email.getKey())
+        mockMvc.perform(get("/posts/{postId}?key={key}", 1L, user.getKey())
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isNotFound())
@@ -302,15 +296,15 @@ class PostControllerTest {
 
         String json = objectMapper.writeValueAsString(postEdit);
 
-        Email email = Email.builder()
+        User user = User.builder()
                 .email("asdf")
                 .key("123456")
                 .build();
 
-        emailRepository.save(email);
+        userRepository.save(user);
 
         //expected
-        mockMvc.perform(patch("/posts/{postId}?key={key}", 1L,email.getKey())
+        mockMvc.perform(patch("/posts/{postId}?key={key}", 1L, user.getKey())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
                 )
@@ -330,15 +324,15 @@ class PostControllerTest {
 
         String json = objectMapper.writeValueAsString(request);
 
-        Email email = Email.builder()
+        User user = User.builder()
                 .email("asdf")
                 .key("123456")
                 .build();
 
-        emailRepository.save(email);
+        userRepository.save(user);
 
         //when
-        mockMvc.perform(post("/posts?key={key}",email.getKey())
+        mockMvc.perform(post("/posts?key={key}", user.getKey())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
                 )
@@ -364,15 +358,15 @@ class PostControllerTest {
 
         String json = objectMapper.writeValueAsString(postEdit);
 
-        Email email = Email.builder()
+        User user = User.builder()
                 .email("asdf")
                 .key("123456")
                 .build();
 
-        emailRepository.save(email);
+        userRepository.save(user);
 
         //expected
-        mockMvc.perform(patch("/posts/{postId}?key={key}", post.getId(),email.getKey())
+        mockMvc.perform(patch("/posts/{postId}?key={key}", post.getId(), user.getKey())
                         .content(json)
                         .contentType(MediaType.APPLICATION_JSON)
                 )
@@ -393,15 +387,15 @@ class PostControllerTest {
 
         String json = objectMapper.writeValueAsString(request);
 
-        Email email = Email.builder()
+        User user = User.builder()
                 .email("asdf")
                 .key("123456")
                 .build();
 
-        emailRepository.save(email);
+        userRepository.save(user);
 
         //when
-        mockMvc.perform(post("/posts?key={key}",email.getKey())
+        mockMvc.perform(post("/posts?key={key}", user.getKey())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
                 )
@@ -420,12 +414,12 @@ class PostControllerTest {
                 .build();
 
 
-        Email email = Email.builder()
+        User user = User.builder()
                 .email("asdf")
                 .key("123456")
                 .build();
 
-        emailRepository.save(email);
+        userRepository.save(user);
 
         String json = objectMapper.writeValueAsString(request);
         String key = "123456";

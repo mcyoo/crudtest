@@ -6,14 +6,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Getter
-public abstract class PodoclubException extends RuntimeException {
+public abstract class CrudTestException extends RuntimeException {
 
     private final Map<String, String> validation = new HashMap<>();
-    public PodoclubException(String message) {
+    public CrudTestException(String message) {
         super(message);
     }
 
-    public PodoclubException(String message, Throwable cause) {
+    public CrudTestException(String message, Throwable cause) {
         super(message, cause);
     }
 

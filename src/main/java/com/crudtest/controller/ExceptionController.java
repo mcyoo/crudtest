@@ -1,6 +1,6 @@
 package com.crudtest.controller;
 
-import com.crudtest.exception.PodoclubException;
+import com.crudtest.exception.CrudTestException;
 import com.crudtest.response.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -33,8 +33,8 @@ public class ExceptionController {
     }
 
     @ResponseBody
-    @ExceptionHandler(PodoclubException.class)
-    public ResponseEntity<ErrorResponse> crudtestException(PodoclubException e){
+    @ExceptionHandler(CrudTestException.class)
+    public ResponseEntity<ErrorResponse> crudtestException(CrudTestException e){
         int statusCode = e.getStatusCode();
 
         ErrorResponse body = ErrorResponse.builder()

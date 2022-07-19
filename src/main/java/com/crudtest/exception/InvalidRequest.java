@@ -3,7 +3,7 @@ package com.crudtest.exception;
 import lombok.Getter;
 
 @Getter
-public class InvalidRequest extends PodoclubException{
+public class InvalidRequest extends CrudTestException {
 
     private static final String MESSAGE = "잘못된 요청입니다.";
 

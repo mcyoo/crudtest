@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
-public class Email {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,7 +20,7 @@ public class Email {
     private String key;
 
     @Builder
-    public Email(String email,String key){
+    public User(String email, String key){
         this.email = email;
         this.key = key;
     }

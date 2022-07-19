@@ -3,6 +3,7 @@ package com.crudtest.response;
 import com.crudtest.domain.Post;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 public class PostResponse {

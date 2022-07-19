@@ -3,7 +3,7 @@ package com.crudtest.exception;
 import lombok.Getter;
 
 @Getter
-public class InvalidKey extends PodoclubException{
+public class InvalidKey extends CrudTestException {
 
     private static final String MESSAGE = "유효하지 않은 Key 값 입니다.";
 
