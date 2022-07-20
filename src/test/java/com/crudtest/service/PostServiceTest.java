@@ -1,6 +1,8 @@
 package com.crudtest.service;
 
 import com.crudtest.domain.Post;
+import com.crudtest.exception.LimitPost;
+import com.crudtest.exception.PostNotAuthority;
 import com.crudtest.exception.PostNotFound;
 import com.crudtest.repository.PostRepository;
 import com.crudtest.request.PostCreate;
@@ -61,12 +63,13 @@ class PostServiceTest {
         Post requestPost = Post.builder()
                 .title("foo")
                 .content("bar")
+                .key("1234")
                 .build();
 
         postRepository.save(requestPost);
 
         //when
-        PostResponse response = postService.get(requestPost.getId());
+        PostResponse response = postService.get(requestPost.getId(),"1234");
 
         //then
         assertNotNull(response);
@@ -83,6 +86,7 @@ class PostServiceTest {
                 .mapToObj(i-> Post.builder()
                         .title("제목 " + i)
                         .content("내용 " + i)
+                        .key("1234")
                         .build())
                 .collect(Collectors.toList());
         postRepository.saveAll(requestPosts);
@@ -111,7 +115,7 @@ class PostServiceTest {
                 .build();
 
         //when
-        List<PostResponse> posts = postService.getList(postSearch);
+        List<PostResponse> posts = postService.getList(postSearch,"1234");
 
         //then
         assertEquals(10L,posts.size());
@@ -127,6 +131,7 @@ class PostServiceTest {
         Post post = Post.builder()
                 .title("제석")
                 .content("짱")
+                .key("1234")
                 .build();
 
         postRepository.save(post);
@@ -136,7 +141,7 @@ class PostServiceTest {
                 .content("짱")
                 .build();
         //when
-        postService.edit(post.getId(),postEdit);
+        postService.edit(post.getId(),postEdit,"1234");
 
         //then
         Post changedPost = postRepository.findById(post.getId())
@@ -153,6 +158,7 @@ class PostServiceTest {
         Post post = Post.builder()
                 .title("제석")
                 .content("짱짱맨")
+                .key("1234")
                 .build();
 
         postRepository.save(post);
@@ -162,7 +168,7 @@ class PostServiceTest {
                 .content("짱")
                 .build();
         //when
-        postService.edit(post.getId(),postEdit);
+        postService.edit(post.getId(),postEdit,"1234");
 
         //then
         Post changedPost = postRepository.findById(post.getId())
@@ -178,11 +184,12 @@ class PostServiceTest {
         Post post = Post.builder()
                 .title("제석")
                 .content("짱짱맨")
+                .key("1234")
                 .build();
         postRepository.save(post);
 
         //when
-        postService.delete(post.getId());
+        postService.delete(post.getId(),"1234");
 
         //then
         assertEquals(0,postRepository.count());
@@ -196,12 +203,13 @@ class PostServiceTest {
         Post post = Post.builder()
                 .title("제석")
                 .content("짱짱맨")
+                .key("1234")
                 .build();
         postRepository.save(post);
 
         // expected
         assertThrows(PostNotFound.class,()->{
-            postService.get(post.getId() + 1L);
+            postService.get(post.getId() + 1L,"1234");
         });
     }
     @Test
@@ -212,12 +220,13 @@ class PostServiceTest {
         Post post = Post.builder()
                 .title("제석")
                 .content("짱짱맨")
+                .key("1234")
                 .build();
         postRepository.save(post);
 
         // expected
         assertThrows(PostNotFound.class,()->{
-            postService.delete(post.getId() + 1L);
+            postService.delete(post.getId() + 1L,"1234");
         });
     }
     @Test
@@ -228,6 +237,7 @@ class PostServiceTest {
         Post post = Post.builder()
                 .title("제석")
                 .content("짱짱맨")
+                .key("1234")
                 .build();
 
         postRepository.save(post);
@@ -239,7 +249,71 @@ class PostServiceTest {
 
         // expected
         assertThrows(PostNotFound.class,()->{
-            postService.edit(post.getId() + 1L,postEdit);
+            postService.edit(post.getId() + 1L,postEdit,"1234");
+        });
+    }
+    @Test
+    @DisplayName("글 100개 등록시 제한")
+    void Test10(){
+
+        //given
+        List<Post> requestPosts = IntStream.range(0,100)
+                .mapToObj(i-> Post.builder()
+                        .title("제목 " + i)
+                        .content("내용 " + i)
+                        .key("1234")
+                        .build())
+                .collect(Collectors.toList());
+        postRepository.saveAll(requestPosts);
+
+        PostCreate postCreate = PostCreate.builder()
+                .title("제목 100")
+                .content("내용 100")
+                .build();
+
+        // expected
+        assertThrows(LimitPost.class,()->{
+            postService.write(postCreate,"1234");
+        });
+    }
+    @Test
+    @DisplayName("글 내용 수정 - 키값이 다름")
+    void Test11(){
+
+        //given
+        Post post = Post.builder()
+                .title("제석")
+                .content("짱짱맨")
+                .key("1234")
+                .build();
+
+        postRepository.save(post);
+
+        PostEdit postEdit = PostEdit.builder()
+                .title("젝슨")
+                .content("짱")
+                .build();
+
+        // expected
+        assertThrows(PostNotAuthority.class,()->{
+            postService.edit(post.getId(),postEdit,"13");
+        });
+    }
+    @Test
+    @DisplayName("글 삭제 - 권한 없음")
+    void Test12(){
+
+        //given
+        Post post = Post.builder()
+                .title("제석")
+                .content("짱짱맨")
+                .key("1234")
+                .build();
+        postRepository.save(post);
+
+        // expected
+        assertThrows(PostNotAuthority.class,()->{
+            postService.delete(post.getId(),"14");
         });
     }
 }

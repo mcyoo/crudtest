@@ -14,11 +14,12 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public List<Post> getList(PostSearch postSearch) {
+    public List<Post> getList(PostSearch postSearch,String key) {
         return jpaQueryFactory.selectFrom(post)
                 .limit(postSearch.getSize())
                 .offset(postSearch.getOffset())
                 .orderBy(post.id.desc())
+                .where(post.key.contains(key))
                 .fetch();
     }
 }

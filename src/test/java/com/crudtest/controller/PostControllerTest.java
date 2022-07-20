@@ -150,12 +150,13 @@ class PostControllerTest {
         Post post = Post.builder()
                 .title("1234567890123")
                 .content("bar")
+                .key("1234")
                 .build();
         postRepository.save(post);
 
         User user = User.builder()
                 .email("asdf")
-                .key("123456")
+                .key("1234")
                 .build();
 
         userRepository.save(user);
@@ -178,6 +179,7 @@ class PostControllerTest {
                 .mapToObj(i -> Post.builder()
                         .title("제목 " + i)
                         .content("내용 " + i)
+                        .key("1234")
                         .build())
                 .collect(Collectors.toList());
         postRepository.saveAll(requestPosts);
@@ -197,7 +199,7 @@ class PostControllerTest {
 
         User user = User.builder()
                 .email("asdf")
-                .key("123456")
+                .key("1234")
                 .build();
 
         userRepository.save(user);
@@ -218,6 +220,7 @@ class PostControllerTest {
         Post post = postRepository.save(Post.builder()
                 .title("1")
                 .content("1")
+                .key("1234")
                 .build()
         );
         PostEdit postEdit = PostEdit.builder()
@@ -229,7 +232,7 @@ class PostControllerTest {
 
         User user = User.builder()
                 .email("asdf")
-                .key("123456")
+                .key("1234")
                 .build();
 
         userRepository.save(user);
@@ -250,12 +253,13 @@ class PostControllerTest {
         Post post = postRepository.save(Post.builder()
                 .title("1")
                 .content("1")
+                        .key("1234")
                 .build()
         );
 
         User user = User.builder()
                 .email("asdf")
-                .key("123456")
+                .key("1234")
                 .build();
 
         userRepository.save(user);
@@ -273,7 +277,7 @@ class PostControllerTest {
     void test8() throws Exception {
         User user = User.builder()
                 .email("asdf")
-                .key("123456")
+                .key("1234")
                 .build();
 
         userRepository.save(user);
@@ -298,7 +302,7 @@ class PostControllerTest {
 
         User user = User.builder()
                 .email("asdf")
-                .key("123456")
+                .key("1234")
                 .build();
 
         userRepository.save(user);
@@ -326,7 +330,7 @@ class PostControllerTest {
 
         User user = User.builder()
                 .email("asdf")
-                .key("123456")
+                .key("1234")
                 .build();
 
         userRepository.save(user);
@@ -350,6 +354,7 @@ class PostControllerTest {
         Post post = postRepository.save(Post.builder()
                 .title("1")
                 .content("1")
+                        .key("1234")
                 .build()
         );
         PostEdit postEdit = PostEdit.builder()
@@ -360,7 +365,7 @@ class PostControllerTest {
 
         User user = User.builder()
                 .email("asdf")
-                .key("123456")
+                .key("1234")
                 .build();
 
         userRepository.save(user);
@@ -439,5 +444,69 @@ class PostControllerTest {
         assertEquals("제목입니다.", post.getTitle());
         assertEquals("내용입니다.", post.getContent());
     }
+    @Test
+    @DisplayName("/posts 수정 요청 시 key 값이 다르면 권한 오류가 나온다.")
+    void test14() throws Exception {
 
+        //given
+        Post post1 = postRepository.save(Post.builder()
+                .title("1")
+                .content("1")
+                .key("1234")
+                .build()
+        );
+        Post post2 = postRepository.save(Post.builder()
+                .title("1")
+                .content("1")
+                .key("123456")
+                .build()
+        );
+
+        User user = User.builder()
+                .email("asdf")
+                .key("1234")
+                .build();
+        userRepository.save(user);
+
+        PostEdit postEdit = PostEdit.builder()
+                .title("2")
+                .content("2")
+                .build();
+
+        String json = objectMapper.writeValueAsString(postEdit);
+
+        //expected
+        mockMvc.perform(patch("/posts/{postId}?key={key}", post2.getId(), user.getKey())
+                        .content(json)
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isUnauthorized())
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("글 삭제시 key 값이 다르면 권한 오류가 난다.")
+    void test15() throws Exception {
+        //given
+        Post post = postRepository.save(Post.builder()
+                .title("1")
+                .content("1")
+                .key("123456")
+                .build()
+        );
+
+        User user = User.builder()
+                .email("asdf")
+                .key("1234")
+                .build();
+
+        userRepository.save(user);
+
+        //expected
+        mockMvc.perform(delete("/posts/{postId}?key={key}", post.getId(), user.getKey())
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isUnauthorized())
+                .andDo(print());
+    }
 }

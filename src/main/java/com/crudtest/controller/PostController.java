@@ -33,25 +33,25 @@ public class PostController {
     @GetMapping("/posts/{postId}")
     public PostResponse get(@PathVariable Long postId,@RequestParam(required = false) String key){
         userService.keyValid(key);
-        return postService.get(postId);
+        return postService.get(postId,key);
     }
 
     @GetMapping("/posts")
     public List<PostResponse> getList(@ModelAttribute PostSearch postSearch,@RequestParam(required = false) String key){
         userService.keyValid(key);
-        return postService.getList(postSearch);
+        return postService.getList(postSearch,key);
     }
 
     @PatchMapping("/posts/{postId}")
     public void edit(@PathVariable Long postId, @RequestBody PostEdit postEdit,@RequestParam(required = false) String key) {
         userService.keyValid(key);
         postEdit.validate();
-        postService.edit(postId,postEdit);
+        postService.edit(postId,postEdit,key);
     }
 
     @DeleteMapping("/posts/{postId}")
     public void delete(@PathVariable Long postId,@RequestParam(required = false) String key) {
         userService.keyValid(key);
-        postService.delete(postId);
+        postService.delete(postId,key);
     }
 }
