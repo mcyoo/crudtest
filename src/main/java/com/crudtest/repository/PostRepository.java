@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PostRepository extends JpaRepository<Post,Long>, PostRepositoryCustom{
-    List<Post> findAllByKey(String key);
+    List<Post> findAllByuserKey(String userKey);
 
 
 }

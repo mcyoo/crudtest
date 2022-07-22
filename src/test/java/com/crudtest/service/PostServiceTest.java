@@ -63,7 +63,7 @@ class PostServiceTest {
         Post requestPost = Post.builder()
                 .title("foo")
                 .content("bar")
-                .key("1234")
+                .userKey("1234")
                 .build();
 
         postRepository.save(requestPost);
@@ -86,7 +86,7 @@ class PostServiceTest {
                 .mapToObj(i-> Post.builder()
                         .title("제목 " + i)
                         .content("내용 " + i)
-                        .key("1234")
+                        .userKey("1234")
                         .build())
                 .collect(Collectors.toList());
         postRepository.saveAll(requestPosts);
@@ -131,7 +131,7 @@ class PostServiceTest {
         Post post = Post.builder()
                 .title("제석")
                 .content("짱")
-                .key("1234")
+                .userKey("1234")
                 .build();
 
         postRepository.save(post);
@@ -158,7 +158,7 @@ class PostServiceTest {
         Post post = Post.builder()
                 .title("제석")
                 .content("짱짱맨")
-                .key("1234")
+                .userKey("1234")
                 .build();
 
         postRepository.save(post);
@@ -184,7 +184,7 @@ class PostServiceTest {
         Post post = Post.builder()
                 .title("제석")
                 .content("짱짱맨")
-                .key("1234")
+                .userKey("1234")
                 .build();
         postRepository.save(post);
 
@@ -203,7 +203,7 @@ class PostServiceTest {
         Post post = Post.builder()
                 .title("제석")
                 .content("짱짱맨")
-                .key("1234")
+                .userKey("1234")
                 .build();
         postRepository.save(post);
 
@@ -220,7 +220,7 @@ class PostServiceTest {
         Post post = Post.builder()
                 .title("제석")
                 .content("짱짱맨")
-                .key("1234")
+                .userKey("1234")
                 .build();
         postRepository.save(post);
 
@@ -237,7 +237,7 @@ class PostServiceTest {
         Post post = Post.builder()
                 .title("제석")
                 .content("짱짱맨")
-                .key("1234")
+                .userKey("1234")
                 .build();
 
         postRepository.save(post);
@@ -261,7 +261,7 @@ class PostServiceTest {
                 .mapToObj(i-> Post.builder()
                         .title("제목 " + i)
                         .content("내용 " + i)
-                        .key("1234")
+                        .userKey("1234")
                         .build())
                 .collect(Collectors.toList());
         postRepository.saveAll(requestPosts);
@@ -284,7 +284,7 @@ class PostServiceTest {
         Post post = Post.builder()
                 .title("제석")
                 .content("짱짱맨")
-                .key("1234")
+                .userKey("1234")
                 .build();
 
         postRepository.save(post);
@@ -307,7 +307,7 @@ class PostServiceTest {
         Post post = Post.builder()
                 .title("제석")
                 .content("짱짱맨")
-                .key("1234")
+                .userKey("1234")
                 .build();
         postRepository.save(post);
 

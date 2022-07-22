@@ -14,14 +14,14 @@ public class MailRequest {
 
     private String title = "[CRUD TEST] 인증키 입니다.";
     private String email;
-    private String key;
+    private String userKey;
 
     private String content;
 
     @Builder
-    public MailRequest(String email,String key){
+    public MailRequest(String email,String userKey){
         this.email = email;
-        this.key = key;
-        this.content = "인증키 : " + key + " 입니다.";
+        this.userKey = userKey;
+        this.content = "인증키 : " + userKey + " 입니다.";
     }
 }

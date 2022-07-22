@@ -18,16 +18,16 @@ public class Post {
 
     private String title;
 
-    private String key;
+    private String userKey;
 
     @Lob
     private String content;
 
     @Builder
-    public Post(String title,String content,String key){
+    public Post(String title,String content,String userKey){
         this.title = title;
         this.content = content;
-        this.key = key;
+        this.userKey = userKey;
     }
 
     public PostEditor.PostEditorBuilder toEditor() {

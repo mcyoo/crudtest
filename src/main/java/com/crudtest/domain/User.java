@@ -17,11 +17,11 @@ public class User {
     private Long id;
 
     private String email;
-    private String key;
+    private String userKey;
 
     @Builder
-    public User(String email, String key){
+    public User(String email, String userKey){
         this.email = email;
-        this.key = key;
+        this.userKey = userKey;
     }
 }

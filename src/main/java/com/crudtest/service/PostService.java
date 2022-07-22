@@ -24,8 +24,8 @@ import java.util.stream.Collectors;
 public class PostService {
     private final PostRepository postRepository;
 
-    public Long write(PostCreate postCreate,String key){
-        List<Post> posts = postRepository.findAllByKey(key);
+    public Long write(PostCreate postCreate,String userKey){
+        List<Post> posts = postRepository.findAllByuserKey(userKey);
         if(posts.size() == 100) {
             throw new LimitPost();
         }
@@ -33,7 +33,7 @@ public class PostService {
         Post post = Post.builder()
                 .title(postCreate.getTitle())
                 .content(postCreate.getContent())
-                .key(key)
+                .userKey(userKey)
                 .build();
 
         postRepository.save(post);
@@ -41,11 +41,11 @@ public class PostService {
         return post.getId();
     }
 
-    public PostResponse get(Long id,String key){
+    public PostResponse get(Long id,String userKey){
         Post post = postRepository.findById(id)
                 .orElseThrow(PostNotFound::new);
 
-        if(!post.getKey().equals(key)) {
+        if(!post.getUserKey().equals(userKey)) {
             throw new PostNotAuthority("Id","확인할 권한이 없습니다.");
         }
 
@@ -59,18 +59,18 @@ public class PostService {
     //글이 너무 많은 경우 -> 비용이 너무 많이 든다.
     //글이 100,000,000 개인 경우 -> DB가 뻗을 수 있다.
     //DB -> 애플리케이션 서버로 전달되는 시간 ,트래픽 비용 발생
-    public List<PostResponse> getList(PostSearch postSearch,String key){
-        return postRepository.getList(postSearch,key).stream()
+    public List<PostResponse> getList(PostSearch postSearch,String userKey){
+        return postRepository.getList(postSearch,userKey).stream()
                 .map(PostResponse::new)
                 .collect(Collectors.toList());
     }
 
     @Transactional
-    public void edit(Long id, PostEdit postEdit,String key){
+    public void edit(Long id, PostEdit postEdit,String userKey){
         Post post = postRepository.findById(id)
                 .orElseThrow(PostNotFound::new);
 
-        if(!post.getKey().equals(key)) {
+        if(!post.getUserKey().equals(userKey)) {
             throw new PostNotAuthority("Id","수정할 권한이 없습니다.");
         }
         PostEditor.PostEditorBuilder editorBuilder = post.toEditor();
@@ -82,11 +82,11 @@ public class PostService {
         post.edit(postEditor);
     }
 
-    public void delete(Long id,String key) {
+    public void delete(Long id,String userKey) {
         Post post = postRepository.findById(id)
                 .orElseThrow(PostNotFound::new);
 
-        if(!post.getKey().equals(key)) {
+        if(!post.getUserKey().equals(userKey)) {
             throw new PostNotAuthority("Id","삭제할 권한이 없습니다.");
         }
 

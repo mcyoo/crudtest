@@ -42,7 +42,7 @@ class UserServiceTest {
         assertEquals(1, userRepository.count());
         User user = userRepository.findAll().get(0);
         assertEquals("dbwptjr@naver.com", user.getEmail());
-        System.out.println(user.getKey());
+        System.out.println(user.getUserKey());
     }
 
     @Test
@@ -51,7 +51,7 @@ class UserServiceTest {
         //given
         User user = User.builder()
                 .email("dbwptjr@naver.com")
-                .key("123123")
+                .userKey("123123")
                 .build();
         userRepository.save(user);
 

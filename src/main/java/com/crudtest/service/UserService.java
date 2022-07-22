@@ -28,7 +28,7 @@ public class UserService {
         String uuid = UUID.randomUUID().toString().substring(0,8);
         User user = User.builder()
                 .email(request.getEmail())
-                .key(uuid)
+                .userKey(uuid)
                 .build();
 
         if(userRepository.findByEmail(user.getEmail()).stream().count() == 1){
@@ -37,24 +37,24 @@ public class UserService {
 
         userRepository.save(user);
 
-        sendMail(user.getKey(),user.getEmail());
+        sendMail(user.getUserKey(),user.getEmail());
 
         return user.getId();
     }
-    public void keyValid(String key) {
-        if(StringUtils.isNullOrEmpty(key))
+    public void userKeyValid(String userKey) {
+        if(StringUtils.isNullOrEmpty(userKey))
         {
             throw new InvalidKey("Key","Key 를 입력해주세요!");
         }
-        userRepository.findByKey(key)
+        userRepository.findByuserKey(userKey)
                 .orElseThrow(() -> new InvalidKey("Key","Key 값을 확인해주세요."));
     }
 
-    public void sendMail(String key,String email) {
+    public void sendMail(String userKey,String email) {
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
 
         MailRequest mailRequest = MailRequest.builder()
-                .key(key)
+                .userKey(userKey)
                 .email(email)
                 .build();
 

@@ -64,14 +64,14 @@ class PostControllerTest {
 
         User user = User.builder()
                 .email("asdf")
-                .key("123456")
+                .userKey("123456")
                 .build();
 
         userRepository.save(user);
 
         String json = objectMapper.writeValueAsString(request);
 
-        mockMvc.perform(post("/posts?key={key}", user.getKey())
+        mockMvc.perform(post("/posts?userKey={userKey}", user.getUserKey())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
                 )
@@ -92,14 +92,14 @@ class PostControllerTest {
 
         User user = User.builder()
                 .email("asdf")
-                .key("123456")
+                .userKey("123456")
                 .build();
 
         userRepository.save(user);
 
         String json = objectMapper.writeValueAsString(request);
 
-        mockMvc.perform(post("/posts?key={key}", user.getKey())
+        mockMvc.perform(post("/posts?userKey={userKey}", user.getUserKey())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
                 )
@@ -122,13 +122,13 @@ class PostControllerTest {
 
         User user = User.builder()
                 .email("asdf")
-                .key("123456")
+                .userKey("123456")
                 .build();
 
         userRepository.save(user);
 
         //when
-        mockMvc.perform(post("/posts?key={key}", user.getKey())
+        mockMvc.perform(post("/posts?userKey={userKey}", user.getUserKey())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
                 )
@@ -150,19 +150,19 @@ class PostControllerTest {
         Post post = Post.builder()
                 .title("1234567890123")
                 .content("bar")
-                .key("1234")
+                .userKey("1234")
                 .build();
         postRepository.save(post);
 
         User user = User.builder()
                 .email("asdf")
-                .key("1234")
+                .userKey("1234")
                 .build();
 
         userRepository.save(user);
 
         //expected
-        mockMvc.perform(get("/posts/{postId}?key={key}", post.getId(), user.getKey())
+        mockMvc.perform(get("/posts/{postId}?userKey={userKey}", post.getId(), user.getUserKey())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(post.getId()))
@@ -179,7 +179,7 @@ class PostControllerTest {
                 .mapToObj(i -> Post.builder()
                         .title("제목 " + i)
                         .content("내용 " + i)
-                        .key("1234")
+                        .userKey("1234")
                         .build())
                 .collect(Collectors.toList());
         postRepository.saveAll(requestPosts);
@@ -199,13 +199,13 @@ class PostControllerTest {
 
         User user = User.builder()
                 .email("asdf")
-                .key("1234")
+                .userKey("1234")
                 .build();
 
         userRepository.save(user);
 
         //expected
-        mockMvc.perform(get("/posts?page=1&size=10&key={key}", user.getKey())
+        mockMvc.perform(get("/posts?page=1&size=10&userKey={userKey}", user.getUserKey())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()", Matchers.is(10)))
@@ -220,7 +220,7 @@ class PostControllerTest {
         Post post = postRepository.save(Post.builder()
                 .title("1")
                 .content("1")
-                .key("1234")
+                .userKey("1234")
                 .build()
         );
         PostEdit postEdit = PostEdit.builder()
@@ -232,13 +232,13 @@ class PostControllerTest {
 
         User user = User.builder()
                 .email("asdf")
-                .key("1234")
+                .userKey("1234")
                 .build();
 
         userRepository.save(user);
 
         //expected
-        mockMvc.perform(patch("/posts/{postId}?key={key}", post.getId(), user.getKey())
+        mockMvc.perform(patch("/posts/{postId}?userKey={userKey}", post.getId(), user.getUserKey())
                         .content(json)
                         .contentType(MediaType.APPLICATION_JSON)
                 )
@@ -253,19 +253,19 @@ class PostControllerTest {
         Post post = postRepository.save(Post.builder()
                 .title("1")
                 .content("1")
-                        .key("1234")
+                        .userKey("1234")
                 .build()
         );
 
         User user = User.builder()
                 .email("asdf")
-                .key("1234")
+                .userKey("1234")
                 .build();
 
         userRepository.save(user);
 
         //expected
-        mockMvc.perform(delete("/posts/{postId}?key={key}", post.getId(), user.getKey())
+        mockMvc.perform(delete("/posts/{postId}?userKey={userKey}", post.getId(), user.getUserKey())
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isOk())
@@ -277,12 +277,12 @@ class PostControllerTest {
     void test8() throws Exception {
         User user = User.builder()
                 .email("asdf")
-                .key("1234")
+                .userKey("1234")
                 .build();
 
         userRepository.save(user);
         //expected
-        mockMvc.perform(get("/posts/{postId}?key={key}", 1L, user.getKey())
+        mockMvc.perform(get("/posts/{postId}?userKey={userKey}", 1L, user.getUserKey())
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isNotFound())
@@ -302,13 +302,13 @@ class PostControllerTest {
 
         User user = User.builder()
                 .email("asdf")
-                .key("1234")
+                .userKey("1234")
                 .build();
 
         userRepository.save(user);
 
         //expected
-        mockMvc.perform(patch("/posts/{postId}?key={key}", 1L, user.getKey())
+        mockMvc.perform(patch("/posts/{postId}?userKey={userKey}", 1L, user.getUserKey())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
                 )
@@ -330,13 +330,13 @@ class PostControllerTest {
 
         User user = User.builder()
                 .email("asdf")
-                .key("1234")
+                .userKey("1234")
                 .build();
 
         userRepository.save(user);
 
         //when
-        mockMvc.perform(post("/posts?key={key}", user.getKey())
+        mockMvc.perform(post("/posts?userKey={userKey}", user.getUserKey())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
                 )
@@ -354,7 +354,7 @@ class PostControllerTest {
         Post post = postRepository.save(Post.builder()
                 .title("1")
                 .content("1")
-                        .key("1234")
+                        .userKey("1234")
                 .build()
         );
         PostEdit postEdit = PostEdit.builder()
@@ -365,13 +365,13 @@ class PostControllerTest {
 
         User user = User.builder()
                 .email("asdf")
-                .key("1234")
+                .userKey("1234")
                 .build();
 
         userRepository.save(user);
 
         //expected
-        mockMvc.perform(patch("/posts/{postId}?key={key}", post.getId(), user.getKey())
+        mockMvc.perform(patch("/posts/{postId}?userKey={userKey}", post.getId(), user.getUserKey())
                         .content(json)
                         .contentType(MediaType.APPLICATION_JSON)
                 )
@@ -394,13 +394,13 @@ class PostControllerTest {
 
         User user = User.builder()
                 .email("asdf")
-                .key("123456")
+                .userKey("123456")
                 .build();
 
         userRepository.save(user);
 
         //when
-        mockMvc.perform(post("/posts?key={key}", user.getKey())
+        mockMvc.perform(post("/posts?userKey={userKey}", user.getUserKey())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
                 )
@@ -409,7 +409,7 @@ class PostControllerTest {
     }
 
     @Test
-    @DisplayName("/posts 요청시 key 값이 있어야 한다.")
+    @DisplayName("/posts 요청시 userKey 값이 있어야 한다.")
     void test13() throws Exception {
         //글 제목
         //글 내용
@@ -421,16 +421,16 @@ class PostControllerTest {
 
         User user = User.builder()
                 .email("asdf")
-                .key("123456")
+                .userKey("123456")
                 .build();
 
         userRepository.save(user);
 
         String json = objectMapper.writeValueAsString(request);
-        String key = "123456";
+        String userKey = "123456";
 
         //when
-        mockMvc.perform(post("/posts?key={key}",key)
+        mockMvc.perform(post("/posts?userKey={userKey}",userKey)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
                 )
@@ -445,26 +445,26 @@ class PostControllerTest {
         assertEquals("내용입니다.", post.getContent());
     }
     @Test
-    @DisplayName("/posts 수정 요청 시 key 값이 다르면 권한 오류가 나온다.")
+    @DisplayName("/posts 수정 요청 시 userKey 값이 다르면 권한 오류가 나온다.")
     void test14() throws Exception {
 
         //given
         Post post1 = postRepository.save(Post.builder()
                 .title("1")
                 .content("1")
-                .key("1234")
+                .userKey("1234")
                 .build()
         );
         Post post2 = postRepository.save(Post.builder()
                 .title("1")
                 .content("1")
-                .key("123456")
+                .userKey("123456")
                 .build()
         );
 
         User user = User.builder()
                 .email("asdf")
-                .key("1234")
+                .userKey("1234")
                 .build();
         userRepository.save(user);
 
@@ -476,7 +476,7 @@ class PostControllerTest {
         String json = objectMapper.writeValueAsString(postEdit);
 
         //expected
-        mockMvc.perform(patch("/posts/{postId}?key={key}", post2.getId(), user.getKey())
+        mockMvc.perform(patch("/posts/{postId}?userKey={userKey}", post2.getId(), user.getUserKey())
                         .content(json)
                         .contentType(MediaType.APPLICATION_JSON)
                 )
@@ -485,25 +485,25 @@ class PostControllerTest {
     }
 
     @Test
-    @DisplayName("글 삭제시 key 값이 다르면 권한 오류가 난다.")
+    @DisplayName("글 삭제시 userKey 값이 다르면 권한 오류가 난다.")
     void test15() throws Exception {
         //given
         Post post = postRepository.save(Post.builder()
                 .title("1")
                 .content("1")
-                .key("123456")
+                .userKey("123456")
                 .build()
         );
 
         User user = User.builder()
                 .email("asdf")
-                .key("1234")
+                .userKey("1234")
                 .build();
 
         userRepository.save(user);
 
         //expected
-        mockMvc.perform(delete("/posts/{postId}?key={key}", post.getId(), user.getKey())
+        mockMvc.perform(delete("/posts/{postId}?userKey={userKey}", post.getId(), user.getUserKey())
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isUnauthorized())

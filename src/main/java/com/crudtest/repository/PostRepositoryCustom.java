@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface PostRepositoryCustom {
 
-    List<Post> getList(PostSearch postSearch,String key);
+    List<Post> getList(PostSearch postSearch,String userKey);
 }
