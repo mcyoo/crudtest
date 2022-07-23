@@ -316,4 +316,26 @@ class PostServiceTest {
             postService.delete(post.getId(),"14");
         });
     }
+    @Test
+    @DisplayName("글 수정 - 권한 없음")
+    void Test13(){
+
+        //given
+        Post post = Post.builder()
+                .title("제석")
+                .content("짱짱맨")
+                .userKey("1234")
+                .build();
+        postRepository.save(post);
+
+        PostEdit postEdit = PostEdit.builder()
+                .title("젝슨")
+                .content("짱")
+                .build();
+
+        // expected
+        assertThrows(PostNotAuthority.class,()->{
+            postService.edit(post.getId(),postEdit,"123");
+        });
+    }
 }
