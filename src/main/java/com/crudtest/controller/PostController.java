@@ -22,7 +22,7 @@ public class PostController {
     private final UserService userService;
 
     @PostMapping("/posts")
-    public Map post(@RequestBody(required = false) PostCreate request, @RequestParam(required = false) String userKey) {
+    public Map post(@RequestBody(required = false) PostCreate request, @RequestParam(name = "key", required = false) String userKey) {
         userService.userKeyValid(userKey);
         request.validate();
 
@@ -31,26 +31,26 @@ public class PostController {
     }
 
     @GetMapping("/posts/{postId}")
-    public PostResponse get(@PathVariable Long postId,@RequestParam(required = false) String userKey){
+    public PostResponse get(@PathVariable Long postId,@RequestParam(name = "key",required = false) String userKey){
         userService.userKeyValid(userKey);
         return postService.get(postId,userKey);
     }
 
     @GetMapping("/posts")
-    public List<PostResponse> getList(@ModelAttribute PostSearch postSearch,@RequestParam(required = false) String userKey){
+    public List<PostResponse> getList(@ModelAttribute PostSearch postSearch,@RequestParam(name = "key",required = false) String userKey){
         userService.userKeyValid(userKey);
         return postService.getList(postSearch,userKey);
     }
 
     @PatchMapping("/posts/{postId}")
-    public void edit(@PathVariable Long postId, @RequestBody PostEdit postEdit,@RequestParam(required = false) String userKey) {
+    public void edit(@PathVariable Long postId, @RequestBody PostEdit postEdit,@RequestParam(name = "key",required = false) String userKey) {
         userService.userKeyValid(userKey);
         postEdit.validate();
         postService.edit(postId,postEdit,userKey);
     }
 
     @DeleteMapping("/posts/{postId}")
-    public void delete(@PathVariable Long postId,@RequestParam(required = false) String userKey) {
+    public void delete(@PathVariable Long postId,@RequestParam(name = "key",required = false) String userKey) {
         userService.userKeyValid(userKey);
         postService.delete(postId,userKey);
     }

@@ -22,6 +22,6 @@ public class MailRequest {
     public MailRequest(String email,String userKey){
         this.email = email;
         this.userKey = userKey;
-        this.content = "인증키 : " + userKey + " 입니다.";
+        this.content = "인증키 " + userKey + " 입니다.";
     }
 }

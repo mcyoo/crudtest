@@ -71,7 +71,7 @@ class PostControllerTest {
 
         String json = objectMapper.writeValueAsString(request);
 
-        mockMvc.perform(post("/posts?userKey={userKey}", user.getUserKey())
+        mockMvc.perform(post("/posts?key={userKey}", user.getUserKey())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
                 )
@@ -99,7 +99,7 @@ class PostControllerTest {
 
         String json = objectMapper.writeValueAsString(request);
 
-        mockMvc.perform(post("/posts?userKey={userKey}", user.getUserKey())
+        mockMvc.perform(post("/posts?key={userKey}", user.getUserKey())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
                 )
@@ -128,7 +128,7 @@ class PostControllerTest {
         userRepository.save(user);
 
         //when
-        mockMvc.perform(post("/posts?userKey={userKey}", user.getUserKey())
+        mockMvc.perform(post("/posts?key={userKey}", user.getUserKey())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
                 )
@@ -162,7 +162,7 @@ class PostControllerTest {
         userRepository.save(user);
 
         //expected
-        mockMvc.perform(get("/posts/{postId}?userKey={userKey}", post.getId(), user.getUserKey())
+        mockMvc.perform(get("/posts/{postId}?key={userKey}", post.getId(), user.getUserKey())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(post.getId()))
@@ -205,7 +205,7 @@ class PostControllerTest {
         userRepository.save(user);
 
         //expected
-        mockMvc.perform(get("/posts?page=1&size=10&userKey={userKey}", user.getUserKey())
+        mockMvc.perform(get("/posts?page=1&size=10&key={userKey}", user.getUserKey())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()", Matchers.is(10)))
@@ -238,7 +238,7 @@ class PostControllerTest {
         userRepository.save(user);
 
         //expected
-        mockMvc.perform(patch("/posts/{postId}?userKey={userKey}", post.getId(), user.getUserKey())
+        mockMvc.perform(patch("/posts/{postId}?key={userKey}", post.getId(), user.getUserKey())
                         .content(json)
                         .contentType(MediaType.APPLICATION_JSON)
                 )
@@ -265,7 +265,7 @@ class PostControllerTest {
         userRepository.save(user);
 
         //expected
-        mockMvc.perform(delete("/posts/{postId}?userKey={userKey}", post.getId(), user.getUserKey())
+        mockMvc.perform(delete("/posts/{postId}?key={userKey}", post.getId(), user.getUserKey())
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isOk())
@@ -282,7 +282,7 @@ class PostControllerTest {
 
         userRepository.save(user);
         //expected
-        mockMvc.perform(get("/posts/{postId}?userKey={userKey}", 1L, user.getUserKey())
+        mockMvc.perform(get("/posts/{postId}?key={userKey}", 1L, user.getUserKey())
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isNotFound())
@@ -308,7 +308,7 @@ class PostControllerTest {
         userRepository.save(user);
 
         //expected
-        mockMvc.perform(patch("/posts/{postId}?userKey={userKey}", 1L, user.getUserKey())
+        mockMvc.perform(patch("/posts/{postId}?key={userKey}", 1L, user.getUserKey())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
                 )
@@ -336,7 +336,7 @@ class PostControllerTest {
         userRepository.save(user);
 
         //when
-        mockMvc.perform(post("/posts?userKey={userKey}", user.getUserKey())
+        mockMvc.perform(post("/posts?key={userKey}", user.getUserKey())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
                 )
@@ -371,7 +371,7 @@ class PostControllerTest {
         userRepository.save(user);
 
         //expected
-        mockMvc.perform(patch("/posts/{postId}?userKey={userKey}", post.getId(), user.getUserKey())
+        mockMvc.perform(patch("/posts/{postId}?key={userKey}", post.getId(), user.getUserKey())
                         .content(json)
                         .contentType(MediaType.APPLICATION_JSON)
                 )
@@ -400,7 +400,7 @@ class PostControllerTest {
         userRepository.save(user);
 
         //when
-        mockMvc.perform(post("/posts?userKey={userKey}", user.getUserKey())
+        mockMvc.perform(post("/posts?key={userKey}", user.getUserKey())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
                 )
@@ -430,7 +430,7 @@ class PostControllerTest {
         String userKey = "123456";
 
         //when
-        mockMvc.perform(post("/posts?userKey={userKey}",userKey)
+        mockMvc.perform(post("/posts?key={userKey}",userKey)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
                 )
@@ -476,7 +476,7 @@ class PostControllerTest {
         String json = objectMapper.writeValueAsString(postEdit);
 
         //expected
-        mockMvc.perform(patch("/posts/{postId}?userKey={userKey}", post2.getId(), user.getUserKey())
+        mockMvc.perform(patch("/posts/{postId}?key={userKey}", post2.getId(), user.getUserKey())
                         .content(json)
                         .contentType(MediaType.APPLICATION_JSON)
                 )
@@ -503,7 +503,7 @@ class PostControllerTest {
         userRepository.save(user);
 
         //expected
-        mockMvc.perform(delete("/posts/{postId}?userKey={userKey}", post.getId(), user.getUserKey())
+        mockMvc.perform(delete("/posts/{postId}?key={userKey}", post.getId(), user.getUserKey())
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isUnauthorized())
