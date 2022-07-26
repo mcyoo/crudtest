@@ -36,8 +36,5 @@ public class PostCreate {
         if(StringUtils.isNullOrEmpty(content)){
             throw new InvalidRequest("content","내용은 필수 입니다.");
         }
-        if(title.contains("바보")){
-            throw new InvalidRequest("title","제목에 바보를 포함할 수 없습니다.");
-        }
     }
 }

@@ -53,6 +53,8 @@ public class PostService {
                 .id(post.getId())
                 .title(post.getTitle())
                 .content(post.getContent())
+                .createDate(post.getCreatedDate())
+                .modifiedDate(post.getModifiedDate())
                 .build();
     }
 

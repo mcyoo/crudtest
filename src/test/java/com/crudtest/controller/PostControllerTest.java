@@ -148,11 +148,13 @@ class PostControllerTest {
     void test4() throws Exception {
         //given
         Post post = Post.builder()
-                .title("1234567890123")
+                .title("1234567890")
                 .content("bar")
                 .userKey("1234")
                 .build();
         postRepository.save(post);
+        System.out.println(post.getCreatedDate());
+        System.out.println(post.getModifiedDate());
 
         User user = User.builder()
                 .email("asdf")
@@ -314,37 +316,6 @@ class PostControllerTest {
                 )
                 .andExpect(status().isNotFound())
                 .andDo(print());
-    }
-
-    @Test
-    @DisplayName("게시글 작성시 제목에 '바보'는 포함될 수 없다.")
-    void test10() throws Exception {
-        //글 제목
-        //글 내용
-        PostCreate request = PostCreate.builder()
-                .title("바보 제석")
-                .content("내용입니다.")
-                .build();
-
-        String json = objectMapper.writeValueAsString(request);
-
-        User user = User.builder()
-                .email("asdf")
-                .userKey("1234")
-                .build();
-
-        userRepository.save(user);
-
-        //when
-        mockMvc.perform(post("/posts?key={userKey}", user.getUserKey())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json)
-                )
-                .andExpect(status().isBadRequest())
-                .andDo(print());
-
-        //then
-
     }
 
     @Test
