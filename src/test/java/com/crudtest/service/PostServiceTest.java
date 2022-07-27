@@ -300,7 +300,7 @@ class PostServiceTest {
         });
     }
     @Test
-    @DisplayName("글 삭제 - 권한 없음")
+    @DisplayName("글 삭제 - 키값이 다름")
     void Test12(){
 
         //given
@@ -336,6 +336,23 @@ class PostServiceTest {
         // expected
         assertThrows(PostNotAuthority.class,()->{
             postService.edit(post.getId(),postEdit,"123");
+        });
+    }
+    @Test
+    @DisplayName("글 삭제 - 권한 없음")
+    void Test14(){
+
+        //given
+        Post post = Post.builder()
+                .title("제석")
+                .content("짱짱맨")
+                .userKey("1234")
+                .build();
+        postRepository.save(post);
+
+        // expected
+        assertThrows(PostNotAuthority.class,()->{
+            postService.delete(post.getId(),"14");
         });
     }
 }
