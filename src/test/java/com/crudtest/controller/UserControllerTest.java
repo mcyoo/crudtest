@@ -121,4 +121,26 @@ class UserControllerTest {
         //then
         assertEquals(1, userRepository.count());
     }
+    @Test
+    @DisplayName("/email 요청시 이메일 형식이 다르면 에러가 발생한다.")
+    void test3() throws Exception {
+
+        //글 제목
+        //글 내용
+        UserCreate request = UserCreate.builder()
+                .email("dbwptjrcom")
+                .build();
+
+        String json = objectMapper.writeValueAsString(request);
+
+        //when
+        mockMvc.perform(post("/email")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json)
+                )
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
+                .andDo(print());
+
+    }
 }
