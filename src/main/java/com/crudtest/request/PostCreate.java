@@ -36,5 +36,8 @@ public class PostCreate {
         if(StringUtils.isNullOrEmpty(content)){
             throw new InvalidRequest("content","내용은 필수 입니다.");
         }
+        if(title.length() > 20 ){
+            throw new InvalidRequest("title","제목이 20자를 초과할 수 없습니다.");
+        }
     }
 }

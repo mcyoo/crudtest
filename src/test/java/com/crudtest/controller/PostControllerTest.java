@@ -480,4 +480,33 @@ class PostControllerTest {
                 .andExpect(status().isUnauthorized())
                 .andDo(print());
     }
+    @Test
+    @DisplayName("/posts 요청시 title 값이 20자를 넘으면 안된다.")
+    void test16() throws Exception {
+        //글 제목
+        //글 내용
+        PostCreate request = PostCreate.builder()
+                .title("1234567890123456789012345")
+                .content("내용입니다")
+                .build();
+
+
+        User user = User.builder()
+                .email("asdf")
+                .userKey("123456")
+                .build();
+
+        userRepository.save(user);
+
+        String json = objectMapper.writeValueAsString(request);
+
+        mockMvc.perform(post("/posts?key={userKey}", user.getUserKey())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json)
+                )
+                .andExpect(status().isBadRequest())//400
+                .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
+                .andExpect(jsonPath("$.validation.title").value("제목이 20자를 초과할 수 없습니다."))
+                .andDo(print());
+    }
 }

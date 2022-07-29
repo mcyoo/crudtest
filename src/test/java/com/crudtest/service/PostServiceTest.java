@@ -1,6 +1,7 @@
 package com.crudtest.service;
 
 import com.crudtest.domain.Post;
+import com.crudtest.exception.InvalidRequest;
 import com.crudtest.exception.LimitPost;
 import com.crudtest.exception.PostNotAuthority;
 import com.crudtest.exception.PostNotFound;
