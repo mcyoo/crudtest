@@ -143,4 +143,28 @@ class UserControllerTest {
                 .andDo(print());
 
     }
+
+    @Test
+    @DisplayName("/email 요청시 40자를 넘어가면 에러가 발생한다.")
+    void test4() throws Exception {
+
+        //글 제목
+        //글 내용
+        UserCreate request = UserCreate.builder()
+                .email("123456741252451425142512359asasdfdfasdf012345@naver.com")
+                .build();
+
+        String json = objectMapper.writeValueAsString(request);
+
+        //when
+        mockMvc.perform(post("/email")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json)
+                )
+                .andExpect(status().isBadRequest())//400
+                .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
+                .andExpect(jsonPath("$.validation.email").value("이메일이 40자를 초과할 수 없습니다."))
+                .andDo(print());
+
+    }
 }

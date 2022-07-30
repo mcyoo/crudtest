@@ -37,6 +37,9 @@ public class UserCreate {
         if(!isValidEmail(email)){
             throw new InvalidRequest("email","잘못된 이메일 형식입니다.");
         }
+        if(email.length() > 40 ){
+            throw new InvalidRequest("email","이메일이 40자를 초과할 수 없습니다.");
+        }
     }
     /**
      * Comment  : 정상적인 이메일 인지 검증.
