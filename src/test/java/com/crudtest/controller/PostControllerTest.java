@@ -509,4 +509,39 @@ class PostControllerTest {
                 .andExpect(jsonPath("$.validation.title").value("제목이 20자를 초과할 수 없습니다."))
                 .andDo(print());
     }
+    @Test
+    @DisplayName("/posts 수정 요청 시 title 값이 20자를 초과하면 에러가 발생한다.")
+    void test17() throws Exception {
+
+        //given
+        Post post = postRepository.save(Post.builder()
+                .title("1")
+                .content("1")
+                .userKey("1234")
+                .build()
+        );
+
+        User user = User.builder()
+                .email("asdf")
+                .userKey("1234")
+                .build();
+        userRepository.save(user);
+
+        PostEdit postEdit = PostEdit.builder()
+                .title("123456789012345678901")
+                .content("21234")
+                .build();
+
+        String json = objectMapper.writeValueAsString(postEdit);
+
+        //expected
+        mockMvc.perform(patch("/posts/{postId}?key={userKey}", post.getId(), user.getUserKey())
+                        .content(json)
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isBadRequest())//400
+                .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
+                .andExpect(jsonPath("$.validation.title").value("제목이 20자를 초과할 수 없습니다."))
+                .andDo(print());
+    }
 }
