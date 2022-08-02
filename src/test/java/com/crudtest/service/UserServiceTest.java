@@ -27,12 +27,13 @@ class UserServiceTest {
         userRepository.deleteAll();
     }
 
+    /* 이메일 저장 확인 -> 이메일 전송까지 확인
     @Test
     @DisplayName("이메일 저장")
     void Test1(){
         //given
         UserCreate emailCreate = UserCreate.builder()
-                .email("dbwptjr@naver.com")
+                .email("dbwptjr247@naver.com")
                 .build();
 
         //when
@@ -41,9 +42,10 @@ class UserServiceTest {
         //then
         assertEquals(1, userRepository.count());
         User user = userRepository.findAll().get(0);
-        assertEquals("dbwptjr@naver.com", user.getEmail());
+        assertEquals("dbwptjr247@naver.com", user.getEmail());
         System.out.println(user.getUserKey());
     }
+     */
 
     @Test
     @DisplayName("이메일 중복시 저장 안함")

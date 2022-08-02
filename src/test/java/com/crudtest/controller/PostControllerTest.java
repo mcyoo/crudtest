@@ -153,8 +153,6 @@ class PostControllerTest {
                 .userKey("1234")
                 .build();
         postRepository.save(post);
-        System.out.println(post.getCreatedDate());
-        System.out.println(post.getModifiedDate());
 
         User user = User.builder()
                 .email("asdf")
@@ -186,18 +184,6 @@ class PostControllerTest {
                 .collect(Collectors.toList());
         postRepository.saveAll(requestPosts);
 
-        /*
-        Post post1 = postRepository.save(Post.builder()
-                .title("1")
-                .content("1")
-                .build()
-        );
-        Post post2 = postRepository.save(Post.builder()
-                .title("2")
-                .content("2")
-                .build()
-        );
-         */
 
         User user = User.builder()
                 .email("asdf")
