@@ -24,8 +24,7 @@ import java.util.stream.IntStream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @AutoConfigureMockMvc
 @SpringBootTest
@@ -76,7 +75,8 @@ class PostControllerTest {
                         .content(json)
                 )
                 .andExpect(status().isOk())
-                //.andExpect(content().string("{}"))
+                //.andExpect(jsonPath("$.postId").value(1))
+                //.andExpect(content().string("{postId : 1}"))
                 .andDo(print());
     }
 
@@ -274,6 +274,7 @@ class PostControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("존재하지 않는 글입니다."))
                 .andDo(print());
     }
 
@@ -301,17 +302,18 @@ class PostControllerTest {
                         .content(json)
                 )
                 .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("존재하지 않는 글입니다."))
                 .andDo(print());
     }
 
     @Test
     @DisplayName("게시글 수정시 제목은 필수 이다.")
-    void test11() throws Exception {
+    void test10() throws Exception {
         //given
         Post post = postRepository.save(Post.builder()
                 .title("1")
                 .content("1")
-                        .userKey("1234")
+                .userKey("1234")
                 .build()
         );
         PostEdit postEdit = PostEdit.builder()
@@ -333,12 +335,50 @@ class PostControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
+                .andExpect(jsonPath("$.validation.title").value("제목은 필수 입니다."))
                 .andDo(print());
 
     }
 
     @Test
-    @DisplayName("게시글 작성시 내용은 필수이다.")
+    @DisplayName("게시글 수정시 제목은 필수 이다. 공백값 전송")
+    void test11() throws Exception {
+        //given
+        Post post = postRepository.save(Post.builder()
+                .title("1")
+                .content("1")
+                .userKey("1234")
+                .build()
+        );
+        PostEdit postEdit = PostEdit.builder()
+                .title("")
+                .content("2")
+                .build();
+
+        String json = objectMapper.writeValueAsString(postEdit);
+
+        User user = User.builder()
+                .email("dbwptjr247@naver.com")
+                .userKey("1234")
+                .build();
+
+        userRepository.save(user);
+
+        //expected
+        mockMvc.perform(patch("/posts/{postId}?key={userKey}", post.getId(), user.getUserKey())
+                        .content(json)
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
+                .andExpect(jsonPath("$.validation.title").value("제목은 필수 입니다."))
+                .andDo(print());
+
+    }
+
+    @Test
+    @DisplayName("게시글 작성시 내용은 필수이다. 공백값 전송")
     void test12() throws Exception {
         //글 제목
         //글 내용
@@ -362,6 +402,8 @@ class PostControllerTest {
                         .content(json)
                 )
                 .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
+                .andExpect(jsonPath("$.validation.content").value("내용은 필수 입니다."))
                 .andDo(print());
     }
 
@@ -438,6 +480,8 @@ class PostControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.message").value("권한이 없습니다."))
+                .andExpect(jsonPath("$.validation.id").value("수정할 권한이 없습니다."))
                 .andDo(print());
     }
 
@@ -464,6 +508,8 @@ class PostControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.message").value("권한이 없습니다."))
+                .andExpect(jsonPath("$.validation.id").value("삭제할 권한이 없습니다."))
                 .andDo(print());
     }
     @Test

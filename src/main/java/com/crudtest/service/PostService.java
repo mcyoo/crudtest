@@ -46,7 +46,7 @@ public class PostService {
                 .orElseThrow(PostNotFound::new);
 
         if(!post.getUserKey().equals(userKey)) {
-            throw new PostNotAuthority("Id","확인할 권한이 없습니다.");
+            throw new PostNotAuthority("id","확인할 권한이 없습니다.");
         }
 
         return PostResponse.builder()
@@ -73,7 +73,7 @@ public class PostService {
                 .orElseThrow(PostNotFound::new);
 
         if(!post.getUserKey().equals(userKey)) {
-            throw new PostNotAuthority("Id","수정할 권한이 없습니다.");
+            throw new PostNotAuthority("id","수정할 권한이 없습니다.");
         }
         PostEditor.PostEditorBuilder editorBuilder = post.toEditor();
 
@@ -89,7 +89,7 @@ public class PostService {
                 .orElseThrow(PostNotFound::new);
 
         if(!post.getUserKey().equals(userKey)) {
-            throw new PostNotAuthority("Id","삭제할 권한이 없습니다.");
+            throw new PostNotAuthority("id","삭제할 권한이 없습니다.");
         }
 
         postRepository.delete(post);
