@@ -62,6 +62,8 @@ class UserControllerTest {
                         .content(json)
                 )
                 .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
+                .andExpect(jsonPath("$.validation.email").value("잘못된 이메일 형식입니다."))
                 .andDo(print());
 
         //then
