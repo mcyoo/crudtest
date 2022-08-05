@@ -1,7 +1,6 @@
 package com.crudtest.service;
 
 import com.crudtest.domain.Post;
-import com.crudtest.exception.InvalidRequest;
 import com.crudtest.exception.LimitPost;
 import com.crudtest.exception.PostNotAuthority;
 import com.crudtest.exception.PostNotFound;
@@ -91,24 +90,6 @@ class PostServiceTest {
                         .build())
                 .collect(Collectors.toList());
         postRepository.saveAll(requestPosts);
-
-        /*
-        Long postId = 1L;
-
-        postRepository.saveAll(List.of(
-                Post.builder()
-                        .title("foo1")
-                        .content("bar1")
-                        .build(),
-                Post.builder()
-                        .title("foo2")
-                        .content("bar2")
-                        .build()
-
-        ));
-         */
-
-        //Pageable pageable = PageRequest.of(0,5, DESC,"id");
 
         PostSearch postSearch = PostSearch.builder()
                 .page(1)

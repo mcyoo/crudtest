@@ -2,7 +2,6 @@ package com.crudtest.service;
 
 import com.crudtest.domain.User;
 import com.crudtest.exception.InvalidRequest;
-import com.crudtest.exception.PostNotFound;
 import com.crudtest.repository.UserRepository;
 import com.crudtest.request.UserCreate;
 import org.junit.jupiter.api.BeforeEach;
