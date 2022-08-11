@@ -25,9 +25,6 @@ public class PostCreate {
         this.title = title;
         this.content = content;
     }
-    //빌더의 장점
-    // - 가독성에 좋다.(값 생성에 대한 유연함)
-    // - 필요한 값만 받을 수 있다.
 
     public void validate(){
         if(StringUtils.isNullOrEmpty(title)){

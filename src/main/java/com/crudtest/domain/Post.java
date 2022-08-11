@@ -40,9 +40,4 @@ public class Post extends BaseTimeEntity {
         title = postEditor.getTitle();
         content = postEditor.getContent();
     }
-
-    public String getTitle(){
-        //서비스의 정책을 넣지마세요!! 절대!!
-        return this.title;//.substring(0,10);
-    }
 }
