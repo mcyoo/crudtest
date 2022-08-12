@@ -150,13 +150,35 @@ class UserControllerTest {
     }
 
     @Test
-    @DisplayName("/email 요청시 이메일은 필수다.")
+    @DisplayName("/email 요청시 이메일은 필수다.(이메일 값이 공백)")
     void test5() throws Exception {
 
         //글 제목
         //글 내용
         UserCreate request = UserCreate.builder()
                 .email("")
+                .build();
+
+        String json = objectMapper.writeValueAsString(request);
+
+        //when
+        mockMvc.perform(post("/email")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json)
+                )
+                .andExpect(status().isBadRequest())//400
+                .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
+                .andExpect(jsonPath("$.validation.email").value("이메일을 입력해주세요."))
+                .andDo(print());
+
+    }
+    @Test
+    @DisplayName("/email 요청시 이메일은 필수다.(이메일 값이 없음)")
+    void test6() throws Exception {
+
+        //글 제목
+        //글 내용
+        UserCreate request = UserCreate.builder()
                 .build();
 
         String json = objectMapper.writeValueAsString(request);
