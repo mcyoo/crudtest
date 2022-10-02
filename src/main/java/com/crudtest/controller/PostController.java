@@ -36,6 +36,22 @@ public class PostController {
         return postService.get(postId,userKey);
     }
 
+    @PostMapping("/posts/{postId}/good_count")
+    public Map postGood(@PathVariable Long postId,@RequestParam(name = "key",required = false) String userKey){
+        userService.userKeyValid(userKey);
+        Integer count = postService.write_good_count(postId,userKey);
+
+        return Map.of("postId",postId,"good_count",count);
+    }
+
+    @PostMapping("/posts/{postId}/bad_count")
+    public Map postBad(@PathVariable Long postId,@RequestParam(name = "key",required = false) String userKey){
+        userService.userKeyValid(userKey);
+        Integer count = postService.write_bad_count(postId,userKey);
+
+        return Map.of("postId",postId,"bad_count",count);
+    }
+
     @GetMapping("/posts")
     public List<PostResponse> getList(@ModelAttribute PostSearch postSearch,@RequestParam(name = "key",required = false) String userKey){
         userService.userKeyValid(userKey);

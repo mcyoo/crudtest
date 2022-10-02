@@ -337,4 +337,50 @@ class PostServiceTest {
             postService.delete(post.getId(),"14");
         });
     }
+
+    @Test
+    @DisplayName("good_count 값 증가")
+    void Test15(){
+
+        //given
+        List<Post> requestPosts = IntStream.range(1,31)
+                .mapToObj(i-> Post.builder()
+                        .title("제목 " + i)
+                        .content("내용 " + i)
+                        .userKey("1234")
+                        .build())
+                .collect(Collectors.toList());
+        postRepository.saveAll(requestPosts);
+
+        PostSearch postSearch = PostSearch.builder()
+                .page(1)
+                .size(10)
+                .build();
+
+        //when
+        List<PostResponse> posts = postService.getList(postSearch,"1234");
+        Integer good_count1 = postService.write_good_count(posts.get(0).getId(),"1234");
+        Integer good_count2 = postService.write_good_count(posts.get(0).getId(),"1234");
+
+
+        System.out.println(posts.get(0).getId());
+        System.out.println(posts.get(0).getTitle());
+        System.out.println(posts.get(0).getContent());
+        System.out.println(posts.get(0).getGood_count());
+        System.out.println(posts.get(0).getBad_count());
+
+        //카운트 증가 확인
+        System.out.println(good_count1);
+        System.out.println(good_count2);
+
+
+        //then
+        assertEquals(10L,posts.size());
+        assertEquals("제목 30",posts.get(0).getTitle());
+        assertEquals("제목 26",posts.get(4).getTitle());
+
+        assertEquals(0,posts.get(4).getGood_count());
+        assertEquals(0,posts.get(4).getBad_count());
+        //Transactional 실행이 안되서 DB에 저장되지 않아서 검증 어려움
+    }
 }

@@ -2,6 +2,7 @@ package com.crudtest.service;
 
 import com.crudtest.domain.Post;
 import com.crudtest.domain.PostEditor;
+import com.crudtest.exception.LimitCount;
 import com.crudtest.exception.LimitPost;
 import com.crudtest.exception.PostNotAuthority;
 import com.crudtest.exception.PostNotFound;
@@ -15,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -55,7 +57,45 @@ public class PostService {
                 .content(post.getContent())
                 .createDate(post.getCreatedDate())
                 .modifiedDate(post.getModifiedDate())
+                .good_count(post.getGood_count())
+                .bad_count(post.getBad_count())
                 .build();
+    }
+
+    @Transactional
+    public Integer write_good_count(Long id,String userKey){
+        Post post = postRepository.findById(id)
+                .orElseThrow(PostNotFound::new);
+
+        if(!post.getUserKey().equals(userKey)) {
+            throw new PostNotAuthority("id","확인할 권한이 없습니다.");
+        }
+
+        if(post.getGood_count() == 10000) {
+            throw new LimitCount();
+        }
+
+        post.setGood_count(post.getGood_count()+1);
+
+        return post.getGood_count();
+    }
+
+    @Transactional
+    public Integer write_bad_count(Long id, String userKey){
+        Post post = postRepository.findById(id)
+                .orElseThrow(PostNotFound::new);
+
+        if(!post.getUserKey().equals(userKey)) {
+            throw new PostNotAuthority("id","확인할 권한이 없습니다.");
+        }
+
+        if(post.getBad_count() == 10000) {
+            throw new LimitCount();
+        }
+
+        post.setBad_count(post.getBad_count()+1);
+
+        return post.getBad_count();
     }
 
     //글이 너무 많은 경우 -> 비용이 너무 많이 든다.

@@ -141,6 +141,8 @@ class PostControllerTest {
         Post post = postRepository.findAll().get(0);
         assertEquals("제목입니다.", post.getTitle());
         assertEquals("내용입니다.", post.getContent());
+        assertEquals(0, post.getGood_count());
+        assertEquals(0, post.getBad_count());
     }
 
     @Test
@@ -168,6 +170,8 @@ class PostControllerTest {
                 .andExpect(jsonPath("$.id").value(post.getId()))
                 .andExpect(jsonPath("$.title").value("1234567890"))
                 .andExpect(jsonPath("$.content").value("bar"))
+                .andExpect(jsonPath("$.good_count").value(0))
+                .andExpect(jsonPath("$.bad_count").value(0))
                 .andDo(print());
     }
 
@@ -198,6 +202,9 @@ class PostControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()", Matchers.is(10)))
                 .andExpect(jsonPath("$[0].title").value("제목 20"))
+                .andExpect(jsonPath("$[0].content").value("내용 20"))
+                .andExpect(jsonPath("$[0].good_count").value(0))
+                .andExpect(jsonPath("$[0].bad_count").value(0))
                 .andDo(print());
     }
 
@@ -575,5 +582,81 @@ class PostControllerTest {
                 .andExpect(jsonPath("$.message").value("잘못된 요청입니다."))
                 .andExpect(jsonPath("$.validation.title").value("제목이 20자를 초과할 수 없습니다."))
                 .andDo(print());
+    }
+    @Test
+    @DisplayName("/posts/id/good post good 카운터가 증가한다.")
+    void test19() throws Exception {
+
+        //given
+        Post post = postRepository.save(Post.builder()
+                .title("1")
+                .content("1")
+                .userKey("1234")
+                .build()
+        );
+
+        User user = User.builder()
+                .email("asdf")
+                .userKey("1234")
+                .build();
+        userRepository.save(user);
+
+        //expected
+        mockMvc.perform(post("/posts/{postId}/good_count?key={userKey}", post.getId(), user.getUserKey())
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isOk())//200
+                .andExpect(jsonPath("$.good_count").value("1"))
+                .andDo(print());
+
+        mockMvc.perform(post("/posts/{postId}/good_count?key={userKey}", post.getId(), user.getUserKey())
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isOk())//200
+                .andExpect(jsonPath("$.good_count").value("2"))
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("/posts/id/good post bad 카운터가 증가한다.")
+    void test20() throws Exception {
+
+        //given
+        Post post = postRepository.save(Post.builder()
+                .title("안녕하세요")
+                .content("test 입니다.")
+                .userKey("1234")
+                .build()
+        );
+
+        User user = User.builder()
+                .email("asdf")
+                .userKey("1234")
+                .build();
+        userRepository.save(user);
+
+        //expected
+        mockMvc.perform(post("/posts/{postId}/bad_count?key={userKey}", post.getId(), user.getUserKey())
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isOk())//200
+                .andExpect(jsonPath("$.bad_count").value("1"))
+                .andDo(print());
+
+        mockMvc.perform(post("/posts/{postId}/bad_count?key={userKey}", post.getId(), user.getUserKey())
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isOk())//200
+                .andExpect(jsonPath("$.bad_count").value("2"))
+                .andDo(print());
+
+        mockMvc.perform(get("/posts?page=1&size=10&key={userKey}", user.getUserKey())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()", Matchers.is(1)))
+                .andExpect(jsonPath("$[0].title").value("안녕하세요"))
+                .andExpect(jsonPath("$[0].content").value("test 입니다."))
+                .andDo(print());
+
     }
 }
